@@ -46,7 +46,8 @@ namespace VideoTagPlayer
         #region View Properties
         private TimeSpan _CurrentTime;
         public TimeSpan CurrentTime { get => _CurrentTime; set => SetField(ref _CurrentTime, value); }
-        private NoteTag Tag { get; set; }
+        private new NoteTag Tag { get; set; }
+        private NotesWindow NotesWindow { get; set; }
         #endregion
 
         #region Events
@@ -61,6 +62,10 @@ namespace VideoTagPlayer
             // Setup media player
             VideoView.MediaPlayer = _MediaPlayer;
             _MediaPlayer.TimeChanged += _MediaPlayer_TimeChanged;
+
+            // Show additional panels
+            NotesWindow = new NotesWindow() { Owner = this };
+            NotesWindow.Show();
         }
 
         private void _MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
@@ -78,6 +83,8 @@ namespace VideoTagPlayer
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (_MediaPlayer.IsPlaying)
+                _MediaPlayer.Stop();
             if(Note!=null)
                 Note.Save();
         }
@@ -102,6 +109,8 @@ namespace VideoTagPlayer
                 // Start play
                 IntroTextBlock.Visibility = Visibility.Collapsed;
                 _MediaPlayer.Play(new Media(_LibVLC, new Uri(dialog.FileName)));
+                // Update view
+                NotesWindow.Tags = Note.Tags;
             }
         }
         private void PlayPauseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -116,7 +125,7 @@ namespace VideoTagPlayer
         }
 
         private void AddNoteCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-            => e.CanExecute = true;
+            => e.CanExecute = Note != null;
         private void AddNoteCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if(_MediaPlayer.WillPlay)
@@ -126,9 +135,29 @@ namespace VideoTagPlayer
                 AddNoteWindow noteWindow = new AddNoteWindow(Note, TimeSpan.FromSeconds(_MediaPlayer.Time / 1000));
                 noteWindow.Owner = this;
                 noteWindow.Show();
-                noteWindow.Closed += (o, v) => { _MediaPlayer.Play(); };
+                noteWindow.Closed += (o, v) => 
+                { 
+                    _MediaPlayer.Play();
+                    // Update view
+                    NotesWindow.Tags = Note.Tags;
+                };
             }
         }
+        private void ForwardCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+            => e.CanExecute = _MediaPlayer.WillPlay;
+
+        private void ForwardCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _MediaPlayer.Time += 10*1000;
+        }
+
+        private void BackwardCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _MediaPlayer.Time -= 5 * 1000;
+        }
+
+        private void BackwardCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        => e.CanExecute = _MediaPlayer.WillPlay;
         #endregion
 
         #region Data Binding

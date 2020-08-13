@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -23,7 +24,7 @@ namespace VideoTagPlayer.Models
         public string NoteName => Path.GetFileNameWithoutExtension(FilePath) + " (Note).md";
         [YamlIgnore]
         public string NotePath => Path.Combine(Path.GetDirectoryName(FilePath), NoteName);
-        public List<NoteTag> Tags { get; set; }
+        public ObservableCollection<NoteTag> Tags { get; set; }
         #endregion
 
         #region Construction
@@ -31,7 +32,7 @@ namespace VideoTagPlayer.Models
         public VideoNote(string filePath)
         {
             FilePath = filePath;
-            Tags = new List<NoteTag>();
+            Tags = new ObservableCollection<NoteTag>();
             // Try load
             if(File.Exists(NotePath))
                 Tags = Load(NotePath).Tags;

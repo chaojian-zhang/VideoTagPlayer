@@ -9,3 +9,7 @@ This app can be considered mostly a wrapper around [LibVLCSharp](https://code.vi
 ## Feature
 
 * Add/Modify/Remove tags add play points in a video/audio
+
+## ToDo
+
+* Add keyboard navigation (skip forward a few seconds)

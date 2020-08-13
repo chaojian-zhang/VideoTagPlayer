@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -18,32 +19,18 @@ using VideoTagPlayer.Models;
 namespace VideoTagPlayer
 {
     /// <summary>
-    /// Interaction logic for AddNoteWindow.xaml
+    /// Interaction logic for NotesWindow.xaml
     /// </summary>
-    public partial class AddNoteWindow : Window, INotifyPropertyChanged
+    public partial class NotesWindow : Window, INotifyPropertyChanged
     {
-        #region Properties
-        public AddNoteWindow(VideoNote note, TimeSpan location)
+        public NotesWindow()
         {
-            Note = note;
-            Location = location;
             InitializeComponent();
         }
-        public AddNoteWindow(VideoNote note, NoteTag tag)
-        {
-            Note = note;
-            Location = tag.Location;
-            TagContent = tag.Content;
-            InitializeComponent();
-        }
-        private VideoNote Note;
-        #endregion
 
         #region View Properties
-        private TimeSpan _Location;
-        public TimeSpan Location { get => _Location; set => SetField(ref _Location, value); }
-        private string _TagContent;
-        public string TagContent { get => _TagContent; set => SetField(ref _TagContent, value); }
+        private ObservableCollection<NoteTag> _Tags;
+        public ObservableCollection<NoteTag> Tags { get => _Tags; set { SetField(ref _Tags, value); NotifyPropertyChanged("Tags"); } }
         #endregion
 
         #region Data Binding
@@ -58,21 +45,6 @@ namespace VideoTagPlayer
             return true;
         }
 
-        #endregion
-
-        #region Events
-        private void RemoveButton_Click(object sender, RoutedEventArgs e)
-        {
-            var tag = Note.GetNoteAt(Location);
-            if(tag != null)
-                Note.RemoveNote(tag);
-            this.Close();
-        }
-        private void FinishButton_Click(object sender, RoutedEventArgs e)
-        {
-            Note.AddNoteAt(Location, TagContent);
-            this.Close();
-        }
         #endregion
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VideoTagPlayer"
         mc:Ignorable="d"
-        Title="AddNoteWindow" Height="450" Width="800"
+        Title="Edit Note" Height="450" Width="800"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
     <DockPanel LastChildFill="True">
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
