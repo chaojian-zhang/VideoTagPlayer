@@ -13,10 +13,15 @@
                 <DataTemplate>
                     <DockPanel>
                         <Label Content="{Binding Location}"/>
-                        <TextBlock Text="{Binding Content}"/>
+                        <TextBlock Text="{Binding Content}" MaxWidth="300" TextWrapping="WrapWithOverflow"/>
                     </DockPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="ListViewItem_PreviewMouseLeftButtonDown" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
     </Grid>
 </Window>

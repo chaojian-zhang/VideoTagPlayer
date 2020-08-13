@@ -46,8 +46,19 @@ namespace VideoTagPlayer
         #region View Properties
         private TimeSpan _CurrentTime;
         public TimeSpan CurrentTime { get => _CurrentTime; set => SetField(ref _CurrentTime, value); }
+        private string _TagContent;
+        public string TagContent { get => _TagContent; set => SetField(ref _TagContent, value); }
         private new NoteTag Tag { get; set; }
         private NotesWindow NotesWindow { get; set; }
+        public bool MainWindowClosing { get; private set; }
+        #endregion
+
+        #region Methods
+        internal void Navigate(TimeSpan location)
+        {
+            if (_MediaPlayer.WillPlay)
+                _MediaPlayer.Time = (long)location.TotalMilliseconds;
+        }
         #endregion
 
         #region Events
@@ -64,8 +75,17 @@ namespace VideoTagPlayer
             _MediaPlayer.TimeChanged += _MediaPlayer_TimeChanged;
 
             // Show additional panels
-            NotesWindow = new NotesWindow() { Owner = this };
-            NotesWindow.Show();
+            RefreshNotesWindow(null, null);
+        }
+        private void RefreshNotesWindow(object sender, EventArgs e)
+        {
+            if(!MainWindowClosing)
+            {
+                NotesWindow = new NotesWindow() { Owner = this };
+                NotesWindow.Closed += RefreshNotesWindow;
+                if (Note != null)
+                    NotesWindow.Tags = Note.Tags;
+            }
         }
 
         private void _MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
@@ -75,18 +95,21 @@ namespace VideoTagPlayer
             {
                 Tag = Note.GetNoteAt(CurrentTime);
                 Dispatcher.Invoke(() => OpenTagButton.Visibility = Visibility.Visible);
+                TagContent = Tag.Content;
             }
             else
             {
                 Dispatcher.Invoke(() => OpenTagButton.Visibility = Visibility.Collapsed);
+                TagContent = null;
             }
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             if (_MediaPlayer.IsPlaying)
                 _MediaPlayer.Stop();
-            if(Note!=null)
+            if (Note != null)
                 Note.Save();
+            MainWindowClosing = true;
         }
         private void OpenTagButton_Click(object sender, RoutedEventArgs e)
         {
@@ -104,6 +127,9 @@ namespace VideoTagPlayer
             OpenFileDialog dialog = new OpenFileDialog();
             if(dialog.ShowDialog() == true)
             {
+                // Save old notes
+                if (Note != null)
+                    Note.Save();
                 // Initialize note
                 Note = new VideoNote(dialog.FileName);
                 // Start play
@@ -130,7 +156,8 @@ namespace VideoTagPlayer
         {
             if(_MediaPlayer.WillPlay)
             {
-                _MediaPlayer.Pause();
+                if(_MediaPlayer.IsPlaying)
+                    _MediaPlayer.Pause();
 
                 AddNoteWindow noteWindow = new AddNoteWindow(Note, TimeSpan.FromSeconds(_MediaPlayer.Time / 1000));
                 noteWindow.Owner = this;
@@ -140,8 +167,16 @@ namespace VideoTagPlayer
                     _MediaPlayer.Play();
                     // Update view
                     NotesWindow.Tags = Note.Tags;
+                    // Save
+                    Note.Save();
                 };
             }
+        }
+        private void ShowNotesCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+            => e.CanExecute = _MediaPlayer.WillPlay;
+        private void ShowNotesCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            NotesWindow.Show();
         }
         private void ForwardCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
             => e.CanExecute = _MediaPlayer.WillPlay;

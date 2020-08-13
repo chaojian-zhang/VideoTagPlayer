@@ -15,6 +15,7 @@ namespace VideoTagPlayer
         public static readonly RoutedUICommand AddNote = new RoutedUICommand("Add note at current time", "AddNote", typeof(CustomCommands));
         public static readonly RoutedUICommand Forward = new RoutedUICommand("Forward 10 seconds", "Forward", typeof(CustomCommands));
         public static readonly RoutedUICommand Backward = new RoutedUICommand("Backward 5 seconds", "Backward", typeof(CustomCommands));
+        public static readonly RoutedUICommand ShowNotes = new RoutedUICommand("Show all notes in current video", "ShowNotes", typeof(CustomCommands));
         #endregion
     }
 }

@@ -4,7 +4,7 @@ Inspired by Udemy's tag functionality for online videos, here is a version that 
 
 ## Components
 
-This app can be considered mostly a wrapper around [LibVLCSharp](https://code.videolan.org/videolan/LibVLCSharp/-/tree/3.x). Tag files are saved with " (Note).md" suffix along side video file.
+This app can be considered mostly a wrapper around [LibVLCSharp](https://code.videolan.org/videolan/LibVLCSharp/-/tree/3.x). Tag files are saved with " (Note).yaml" suffix along side video file.
 
 ## Feature
 

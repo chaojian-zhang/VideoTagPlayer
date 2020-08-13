@@ -15,11 +15,13 @@
         <CommandBinding Command="local:CustomCommands.AddNote" CanExecute="AddNoteCommand_CanExecute" Executed="AddNoteCommand_Executed"/>
         <CommandBinding Command="local:CustomCommands.Forward" CanExecute="ForwardCommand_CanExecute" Executed="ForwardCommand_Executed"/>
         <CommandBinding Command="local:CustomCommands.Backward" CanExecute="BackwardCommand_CanExecute" Executed="BackwardCommand_Executed"/>
+        <CommandBinding Command="local:CustomCommands.ShowNotes" CanExecute="ShowNotesCommand_CanExecute" Executed="ShowNotesCommand_Executed"/>
     </Window.CommandBindings>
     <Window.InputBindings>
         <KeyBinding Key="F1" Command="Open"/>
         <KeyBinding Key="Space" Command="local:CustomCommands.PlayPause"/>
         <KeyBinding Key="F2" Command="local:CustomCommands.AddNote"/>
+        <KeyBinding Key="F3" Command="local:CustomCommands.ShowNotes"/>
         <KeyBinding Key="Left" Command="local:CustomCommands.Backward"/>
         <KeyBinding Key="Right" Command="local:CustomCommands.Forward"/>
     </Window.InputBindings>
@@ -28,13 +30,19 @@
             <Grid>
                 <TextBlock x:Name="IntroTextBlock" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FFAAAAAA" Visibility="Visible">
                     F1 to Open File<LineBreak/>
-                    Space to Play/Pause<LineBreak/>
                     F2 to Add Note at Current Location<LineBreak/>
+                    F3 to Show All Notes<LineBreak/>
+                    Space to Play/Pause<LineBreak/>
                     ← or → to Backward (5s) for Forward (10s)<LineBreak/>
                     Tags are automatically saved.
                 </TextBlock>
+                <TextBlock Text="{Binding TagContent}" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="15" Margin="0,5,0,0"></TextBlock>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom">
-                    <Label Content="{Binding CurrentTime}"/>
+                    <Label Content="{Binding CurrentTime}">
+                        <Label.Effect>
+                            <DropShadowEffect BlurRadius="2" Color="#FFCBCBCB" Direction="0" ShadowDepth="0"/>
+                        </Label.Effect>
+                    </Label>
                     <Button x:Name="OpenTagButton" Content="Open Tag" Visibility="Collapsed" Click="OpenTagButton_Click"/>
                 </StackPanel>
             </Grid>

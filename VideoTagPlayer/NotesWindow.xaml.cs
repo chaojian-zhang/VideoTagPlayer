@@ -46,5 +46,13 @@ namespace VideoTagPlayer
         }
 
         #endregion
+
+        #region Events
+        private void ListViewItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            var item = (sender as ListViewItem).DataContext as NoteTag;
+            (Owner as MainWindow).Navigate(item.Location);
+        }
+        #endregion
     }
 }

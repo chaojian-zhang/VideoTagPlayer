@@ -21,7 +21,7 @@ namespace VideoTagPlayer.Models
         #region Properties
         public string FilePath { get; set; }
         [YamlIgnore]
-        public string NoteName => Path.GetFileNameWithoutExtension(FilePath) + " (Note).md";
+        public string NoteName => Path.GetFileNameWithoutExtension(FilePath) + " (Note).yaml";
         [YamlIgnore]
         public string NotePath => Path.Combine(Path.GetDirectoryName(FilePath), NoteName);
         public ObservableCollection<NoteTag> Tags { get; set; }
