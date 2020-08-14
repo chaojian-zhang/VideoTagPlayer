@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -39,7 +40,9 @@ namespace VideoTagPlayer
         private VideoNote Note;
         #endregion
 
-        #region View Properties
+        #region View 
+        private string _Screenshot;
+        public string Screenshot { get => _Screenshot; set => SetField(ref _Screenshot, value); }
         private TimeSpan _Location;
         public TimeSpan Location { get => _Location; set => SetField(ref _Location, value); }
         private string _TagContent;
@@ -61,11 +64,21 @@ namespace VideoTagPlayer
         #endregion
 
         #region Events
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Screenshot = Note.GetScreenshotFor((long)Location.TotalSeconds);
+        }
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
+            // Remove tag
             var tag = Note.GetNoteAt(Location);
             if(tag != null)
                 Note.RemoveNote(tag);
+            // Remove screenshot
+            string screenshot = Note.GetScreenshotFor((long)Location.TotalSeconds);
+            if (File.Exists(screenshot))
+                File.Delete(screenshot);
+            // Close window
             this.Close();
         }
         private void FinishButton_Click(object sender, RoutedEventArgs e)

@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -162,6 +163,11 @@ namespace VideoTagPlayer
                 if(_MediaPlayer.IsPlaying)
                     _MediaPlayer.Pause();
 
+                // Capture a control render snapshot
+                string path = Note.GetScreenshotFor(_MediaPlayer.Time / 1000);
+                _MediaPlayer.TakeSnapshot(0, path, 0, 0);
+
+                // Open edit note window
                 AddNoteWindow noteWindow = new AddNoteWindow(Note, TimeSpan.FromSeconds(_MediaPlayer.Time / 1000));
                 noteWindow.Owner = this;
                 noteWindow.Show();

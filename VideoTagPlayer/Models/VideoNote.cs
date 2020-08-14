@@ -67,6 +67,12 @@ namespace VideoTagPlayer.Models
                 throw new ArgumentException("Note path doesn't exist!");
             return new Deserializer().Deserialize<VideoNote>(File.ReadAllText(notePath));
         }
+
+        internal string GetScreenshotFor(long timeInSeconds)
+        {
+            string imageName = $"{Path.GetFileNameWithoutExtension(NotePath)}-{Convert.ToString(timeInSeconds)}.png";
+            return Path.Combine(Path.GetDirectoryName(FilePath), imageName);
+        }
         #endregion
     }
 }
