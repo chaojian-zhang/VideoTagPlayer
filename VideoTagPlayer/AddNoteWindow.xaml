@@ -16,6 +16,6 @@
             <Button Content="Remove" Click="RemoveButton_Click"/>
             <Button Content="Finish" Click="FinishButton_Click"/>
         </DockPanel>
-        <TextBox AcceptsReturn="True" AcceptsTab="True" Text="{Binding TagContent}"></TextBox>
+        <TextBox AcceptsReturn="True" AcceptsTab="True" Text="{Binding TagContent}" TextWrapping="WrapWithOverflow"></TextBox>
     </DockPanel>
 </Window>
