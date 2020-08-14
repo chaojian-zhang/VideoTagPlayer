@@ -106,13 +106,13 @@ namespace VideoTagPlayer
         }
         private void Window_Closing(object sender, CancelEventArgs e)
         {
+            if (Note != null)
+                Note.Save();
             if (_MediaPlayer.IsPlaying)
             {
                 _MediaPlayer.Pause();
                 _MediaPlayer.Dispose();
             }
-            if (Note != null)
-                Note.Save();
             MainWindowClosing = true;
         }
         private void OpenTagButton_Click(object sender, RoutedEventArgs e)
