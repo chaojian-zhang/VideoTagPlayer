@@ -68,6 +68,7 @@ namespace VideoTagPlayer
         {
             Screenshot = Note.GetScreenshotFor((long)Location.TotalSeconds);
         }
+        // TODO: There is a bug here - open a video, use F2 to create a new tag, don't enter anything and directly click "Remove". The application will crash.
         private void RemoveButton_Click(object sender, RoutedEventArgs e)
         {
             // Remove tag
