@@ -88,7 +88,18 @@ namespace VideoTagPlayer
                     NotesWindow.Tags = Note.Tags;
             }
         }
+        private void Window_Drop(object sender, DragEventArgs e)
+        {
+            // If the DataObject contains string data, extract it.
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string filePath = (e.Data.GetData(DataFormats.FileDrop) as IEnumerable<string>).First();
 
+                // If the string is a file, open it
+                if (File.Exists(filePath))
+                    OpenNewFile(filePath);
+            }
+        }
         private void _MediaPlayer_TimeChanged(object sender, MediaPlayerTimeChangedEventArgs e)
         {
             CurrentTime = TimeSpan.FromSeconds(_MediaPlayer.Time / 1000);
@@ -130,22 +141,23 @@ namespace VideoTagPlayer
         {
             OpenFileDialog dialog = new OpenFileDialog();
             if(dialog.ShowDialog() == true)
-            {
-                // Save old notes
-                if (Note != null)
-                    Note.Save();
-                // Initialize note
-                Note = new VideoNote(dialog.FileName);
-                // Start play
-                IntroTextBlock.Visibility = Visibility.Collapsed;
-                _MediaPlayer.Play(new Media(_LibVLC, new Uri(dialog.FileName)));
-                // Update view
-                NotesWindow.Tags = Note.Tags;
-            }
+                OpenNewFile(dialog.FileName);
+        }
+        private void OpenNewFile(string filePath)
+        {
+            // Save old notes
+            if (Note != null)
+                Note.Save();
+            // Initialize note
+            Note = new VideoNote(filePath);
+            // Start play
+            IntroTextBlock.Visibility = Visibility.Collapsed;
+            _MediaPlayer.Play(new Media(_LibVLC, new Uri(filePath)));
+            // Update view
+            NotesWindow.Tags = Note.Tags;
         }
         private void PlayPauseCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
             => e.CanExecute = true;
-
         private void PlayPauseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             if (_MediaPlayer.IsPlaying)

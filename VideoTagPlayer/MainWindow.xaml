@@ -7,7 +7,7 @@
         xmlns:wpf="clr-namespace:LibVLCSharp.WPF;assembly=LibVLCSharp.WPF"
         mc:Ignorable="d"
         Title="Video Tag Player" Height="450" Width="800"
-        Closing="Window_Closing"
+        Closing="Window_Closing" Drop="Window_Drop" AllowDrop="True"
         DataContext="{Binding RelativeSource={RelativeSource self}}">
     <Window.CommandBindings>
         <CommandBinding Command="Open" CanExecute="OpenFileCommand_CanExecute" Executed="OpenFileCommand_Executed"/>
