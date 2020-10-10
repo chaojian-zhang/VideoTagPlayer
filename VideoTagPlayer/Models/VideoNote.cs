@@ -35,7 +35,10 @@ namespace VideoTagPlayer.Models
             Tags = new ObservableCollection<NoteTag>();
             // Try load
             if(File.Exists(NotePath))
-                Tags = Load(NotePath).Tags;
+            {
+                Tags = new ObservableCollection<NoteTag>(Load(NotePath).Tags.OrderBy(t => t.Location)); // Sort
+            }
+                
         }
         #endregion
 
@@ -44,7 +47,11 @@ namespace VideoTagPlayer.Models
         {
             var tag = GetNoteAt(location);
             if (tag == null)
+            {
                 Tags.Add(new NoteTag { Location = location, Content = content });
+                // Sort
+                Tags = new ObservableCollection<NoteTag>(Tags.OrderBy(t => t.Location));
+            }
             else
                 tag.Content = content;
         }
