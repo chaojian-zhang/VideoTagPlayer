@@ -83,7 +83,7 @@ namespace VideoTagPlayer
             if(!MainWindowClosing)
             {
                 NotesWindow = new NotesWindow() { Owner = this };
-                NotesWindow.Closed += RefreshNotesWindow;
+                NotesWindow.Closed += RefreshNotesWindow; // This is to avoid closing issue, but how does it work? Add explanation here.
                 if (Note != null)
                     NotesWindow.Tags = Note.Tags;
             }
